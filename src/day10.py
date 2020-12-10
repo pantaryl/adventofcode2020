@@ -10,6 +10,7 @@ maxJolt = data[-1] + 3
 data.insert(0, 0)
 data.append(maxJolt)
 
+# Part 1
 one_jolt   = 0
 three_jolt = 0
 
@@ -22,21 +23,22 @@ for i in range(1, len(data)):
 
 print(one_jolt * three_jolt)
 
+# Part 2
 @memoize
 def getPossibilities(joltIdx: int):
-    sum = 0
+    thisSum = 0
 
     if joltIdx == len(data) - 1:
         return 1
 
     for i in range(joltIdx + 1, len(data)):
         if data[i] - data[joltIdx] <= 3:
-            newSum = getPossibilities(i)
-            sum += newSum
+            newSum   = getPossibilities(i)
+            thisSum += newSum
         else:
             break
 
-    return sum
+    return thisSum
 
 part2 = getPossibilities(0)
 print(part2)
