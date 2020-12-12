@@ -8,87 +8,55 @@ from copy import deepcopy
 with open("../input/day12.txt", 'r') as inputFile:
     data = [x.rstrip() for x in inputFile.readlines()]
     #data = [int(x) for x in data]
-
-def addTuple(orig, add):
-    return (orig[0] + add[0], orig[1] + add[1])
-
-def mulTuple(tup, mult):
-    newMult = mult if isinstance(mult, tuple) else (mult, mult)
-
-    return (tup[0] * newMult[0], tup[1] * newMult[1])
-
-def subTuple(orig, sub):
-    return (orig[0] - sub[0], orig[1] - sub[1])
-
-def flipTuple(orig, mulTuple):
-    return (orig[1] * mulTuple[0], orig[0] * mulTuple[1])
-
 # Part 1
-start = (0, 0)
-pos   = (0, 0)
-slope = (1, 0)
+pos   = 0 + 0j
+slope = 1 + 0j
 for line in data:
     direction = line[0]
     count     = int(line[1:])
 
     if direction == 'F':
-        pos = addTuple(pos, mulTuple(slope, count))
+        pos += slope * count
     elif direction == 'N':
-        pos = addTuple(pos, mulTuple((0, 1), count))
+        pos += complex(0, count)
     elif direction == 'E':
-        pos = addTuple(pos, mulTuple((1, 0), count))
+        pos += complex(count, 0)
     elif direction == 'W':
-        pos = addTuple(pos, mulTuple((-1, 0), count))
+        pos += complex(-count, 0)
     elif direction == 'S':
-        pos = addTuple(pos, mulTuple((0, -1), count))
+        pos += complex(0, -count)
     elif direction == 'L':
-        turns = count // 90 - 1
-        if slope[0] == 1:
-            slope = [ (0, 1), (-1, 0), (0, -1) ][turns]
-        elif slope[0] == -1:
-            slope = [ (0, -1), (1, 0), (0, 1) ][turns]
-        elif slope[1] == 1:
-            slope = [ (-1, 0), (0, -1), (1, 0) ][turns]
-        elif slope[1] == -1:
-            slope = [ (1, 0), (0, 1), (-1, 0) ][turns]
+        turns = count // 90
+        slope *= complex(0, 1) ** turns
     elif direction == 'R':
-        turns = count // 90 - 1
-        if slope[0] == 1:
-            slope = [ (0, 1), (-1, 0), (0, -1) ][::-1][turns]
-        elif slope[0] == -1:
-            slope = [ (0, -1), (1, 0), (0, 1) ][::-1][turns]
-        elif slope[1] == 1:
-            slope = [ (-1, 0), (0, -1), (1, 0) ][::-1][turns]
-        elif slope[1] == -1:
-            slope = [ (1, 0), (0, 1), (-1, 0) ][::-1][turns]
+        turns = count // 90
+        slope *= complex(0, -1) ** turns
 
-print(abs(pos[0]) + abs(pos[1]))
+print(int(abs(pos.real) + abs(pos.imag)))
 
 # Part 2
-start    = (0, 0)
-waypoint = (10, 1)
-pos      = (0, 0)
+waypoint = 10 + 1j
+pos      = 0  + 0j
 for line in data:
     direction = line[0]
     count     = int(line[1:])
 
     if direction == 'F':
-        pos = addTuple(pos, mulTuple(waypoint, count))
+        pos += waypoint * count
     elif direction == 'N':
-        waypoint = addTuple(waypoint, mulTuple((0, 1), count))
+        waypoint += complex(0, count)
     elif direction == 'E':
-        waypoint = addTuple(waypoint, mulTuple((1, 0), count))
+        waypoint += complex(count, 0)
     elif direction == 'W':
-        waypoint = addTuple(waypoint, mulTuple((-1, 0), count))
+        waypoint += complex(-count, 0)
     elif direction == 'S':
-        waypoint = addTuple(waypoint, mulTuple((0, -1), count))
+        waypoint += complex(0, -count)
     else:
-        if line == 'L180' or line == 'R180':
-            waypoint = (-waypoint[0], -waypoint[1])
-        elif line == 'L90' or line == 'R270':
-            waypoint = (-waypoint[1], waypoint[0])
-        elif line == 'L270' or line == 'R90':
-            waypoint = (waypoint[1], -waypoint[0])
+        turns = (count // 90)
+        if direction == 'L':
+            waypoint *= complex(0, 1)**turns
+        elif direction == 'R':
+            waypoint *= complex(0, -1)**turns
     #print(f"{line} - pos = {pos}, waypoint = {waypoint}")
 
-print(abs(pos[0]) + abs(pos[1]))
+print(int(abs(pos.real) + abs(pos.imag)))
