@@ -4,6 +4,7 @@ from copy import deepcopy
 from enum import Enum
 import os
 from math_utils import *
+from helpers import *
 
 # Complex numbers in Python! == i + nj (x + ny), good for coordinates
 # complex*+imaginary to rotate left/ccw, complex*-imaginary to rotate right/cw
@@ -57,11 +58,6 @@ print("".join([str(x) for x in list(cups)[1:]]))
 # Part 2
 # A lookup-table and linked list make this solution fast. The LUT uses the label of the cup to get you the node,
 # and the linked list makes it trivial to add/remove nodes as necessary.
-class LLNode:
-    def __init__(self, val):
-        self.val  = val
-        self.next = None
-
 cups = data + list(range(10, 1000000+1))
 lut = {}
 for i in range(1, 1000000 + 1):
